@@ -9,7 +9,11 @@
 
 // Store edges in adj_list such that smaller id is in the adj_list of larger id
 int Graph::add_node(void *attrs) {
-    int node_id = node_counter++;
+    int node_id;
+    do{
+        node_id= node_counter++;
+    }while (has_node(node_id));
+
     adj_list[node_id] = std::unordered_map<int, std::pair<float, void *>>();
     node_attrs[node_id] = attrs;
     return node_id;
@@ -57,8 +61,8 @@ float Graph::size() {
     return ans;
 }
 
-NodeView Graph::neighbors(int id) {
-    std::vector<std::tuple<int, void *>> ans;
+NodeViewWithData Graph::neighbors(int id) {
+    NodeViewWithData ans;
     for(const auto& i:adj_list){
         if(i.first == id){
             for(const auto& j:i.second){
@@ -124,7 +128,7 @@ void Graph::remove_nodes_from(std::vector<int> ids) {
 
 void Graph::add_node(int id, void *attrs) {
     if(!has_node(id)){
-        node_counter = std::max(id,node_counter);
+        node_counter = std::max(id+1,node_counter);
         adj_list[id] = std::unordered_map<int, std::pair<float, void *>>();
         node_attrs[id] = attrs;
     }
@@ -169,16 +173,16 @@ void Graph::add_edges_from(const std::vector<std::tuple<int, int>>& edges) {
     }
 }
 
-NodeView Graph::nodes() {
-    std::vector<std::tuple<int, void *>> ans;
+NodeViewWithData Graph::nodes() {
+    NodeViewWithData ans;
     for(auto i:node_attrs){
         ans.emplace_back(i.first,i.second);
     }
     return ans;
 }
 
-EdgeView Graph::edges() {
-    std::vector<std::tuple<int, int,float, void *>> ans;
+EdgeViewWithData Graph::edges() {
+    EdgeViewWithData ans;
     for(const auto& i:adj_list){
         for(auto j:i.second){
             ans.emplace_back(i.first,j.first,j.second.first,j.second.second);
@@ -236,8 +240,8 @@ void Graph::update(const std::vector<std::tuple<int, int,void*>>& edges) {
     add_attr_edges_from(edges);
 }
 
-EdgeView Graph::edges(int id) {
-    EdgeView ans;
+EdgeViewWithData Graph::edges(int id) {
+    EdgeViewWithData ans;
     for(const auto& i:adj_list){
         if (i.first == id){
             for(auto j:i.second)
@@ -250,8 +254,8 @@ EdgeView Graph::edges(int id) {
     return ans;
 }
 
-EdgeView Graph::edges(const std::vector<int>& ids) {
-    EdgeView ans;
+EdgeViewWithData Graph::edges(const std::vector<int>& ids) {
+    EdgeViewWithData ans;
     for(auto i:ids){
         auto l = edges(i);
         ans.insert(ans.end(),l.begin(),l.end());
@@ -261,23 +265,19 @@ EdgeView Graph::edges(const std::vector<int>& ids) {
     return ans;
 }
 
-float Graph::degree(int id) {
-    float ans=0;
-    for(auto i:edges(id)){
-        ans+= std::get<float>(i);
-    }
-    return ans;
+int Graph::degree(int id) {
+    return edges(id).size();
 }
 
-std::unordered_map<int, float> Graph::degree(const std::vector<int>& nodes) {
-    std::unordered_map<int, float> ans;
+std::unordered_map<int, int> Graph::degree(const std::vector<int>& nodes) {
+    std::unordered_map<int, int> ans;
     for(auto i:nodes){
         ans[i] = degree(i);
     }
     return ans;
 }
 
-std::unordered_map<int, float> Graph::degree() {
+std::unordered_map<int, int> Graph::degree() {
     std::vector<int> nodes;
     for(auto i: Graph::nodes()){
         nodes.push_back(std::get<int>(i));
@@ -289,5 +289,8 @@ void Graph::add_edge(int u, int v,void* attrs) {
     add_edge(std::make_pair(u,v),attrs);
 }
 
+bool Graph::has_edge(int u, int v) {
+    return has_edge(std::make_pair(u,v));
+}
 
 

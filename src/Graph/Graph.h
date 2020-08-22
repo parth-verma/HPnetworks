@@ -5,11 +5,11 @@
 #ifndef GRAPHS_GRAPH_H
 #define GRAPHS_GRAPH_H
 
-typedef std::vector<std::tuple<int,void*>> NodeView;
-typedef std::vector<std::tuple<int,int,float,void*>> EdgeView;
-
 #include <vector>
 #include <unordered_map>
+#include <types/EdgeViewWithData.h>
+#include <types/NodeViewWithData.h>
+
 
 class Graph {
 protected:
@@ -32,94 +32,102 @@ public:
 
     explicit Graph(const std::vector<std::tuple<int, int, void *>>& edges);
 
-    // Adding and removing nodes and edges
+    virtual // Adding and removing nodes and edges
     int add_node(void *attrs = nullptr);
 
-    void add_node(int id, void *attrs = nullptr);
+    virtual void add_node(int id, void *attrs = nullptr);
 
-    void add_nodes_from(const std::vector<std::tuple<int, void *>> &nodes);
+    virtual void add_nodes_from(const std::vector<std::tuple<int, void *>> &nodes);
 
-    void add_nodes_from(const std::vector<void *> &nodes);
+    virtual void add_nodes_from(const std::vector<void *> &nodes);
 
-    void add_nodes_from(std::vector<int> nodes);
+    virtual void add_nodes_from(std::vector<int> nodes);
 
-    void remove_node(int id);
+    virtual void remove_node(int id);
 
-    void remove_nodes_from(std::vector<int> ids);
+    virtual void remove_nodes_from(std::vector<int> ids);
 
-    void add_edge(std::pair<int, int> edge, void *attrs = nullptr);
-    void add_edge(int u, int v, void *attrs = nullptr);
+    virtual void add_edge(std::pair<int, int> edge, void *attrs = nullptr);
 
-    void add_edge(std::pair<int, int> edge, float weight, void *attrs = nullptr);
+    virtual void add_edge(int u, int v, void *attrs = nullptr);
 
-    void add_edges_from(const std::vector<std::tuple<int, int, float>> &edges);
+    virtual void add_edge(std::pair<int, int> edge, float weight, void *attrs = nullptr);
 
-    void add_edges_from(const std::vector<std::tuple<int, int>> &edges);
+    virtual void add_edges_from(const std::vector<std::tuple<int, int, float>> &edges);
 
-    void add_attr_edges_from(const std::vector<std::tuple<int, int, float, void *>>& edges);
+    virtual void add_edges_from(const std::vector<std::tuple<int, int>> &edges);
 
-    void add_attr_edges_from(const std::vector<std::tuple<int, int, void *>>& edges);
+    virtual void add_attr_edges_from(const std::vector<std::tuple<int, int, float, void *>>& edges);
 
-    void remove_edge(std::pair<int, int> edge);
+    virtual void add_attr_edges_from(const std::vector<std::tuple<int, int, void *>>& edges);
 
-    void remove_edges_from(const std::vector<std::pair<int, int>> &edges);
+    virtual void remove_edge(std::pair<int, int> edge);
 
-    void update(Graph G);
+    virtual void remove_edges_from(const std::vector<std::pair<int, int>> &edges);
 
-    void update(const std::vector<std::tuple<int, int, float>>& edges);
+//    virtual void update(Graph G);
 
-    void update(const std::vector<std::tuple<int, int>>& edges);
+    virtual void update(const std::vector<std::tuple<int, int, float>>& edges);
 
-    void update(const std::vector<std::tuple<int, int, float, void *>>& edges);
+    virtual void update(const std::vector<std::tuple<int, int>>& edges);
 
-    void update(const std::vector<std::tuple<int, int, void *>>& edges);
+    virtual void update(const std::vector<std::tuple<int, int, float, void *>>& edges);
 
-    void update(const std::vector<std::tuple<int, void *>> &nodes);
+    virtual void update(const std::vector<std::tuple<int, int, void *>>& edges);
 
-    void update(std::vector<int> nodes);
+    virtual void update(const std::vector<std::tuple<int, void *>> &nodes);
 
-    void clear();
+    virtual void update(std::vector<int> nodes);
 
-    void clear_edges();
+    virtual void clear();
 
-    //Reporting
-    NodeView nodes();
+    virtual void clear_edges();
 
-    bool has_node(int id);
+    virtual NodeViewWithData nodes();
 
-    EdgeView edges();
-    EdgeView edges(int id);
-    EdgeView edges(const std::vector<int>& ids);
+    virtual bool has_node(int id);
 
-    bool has_edge(std::pair<int, int> edge);
+    virtual EdgeViewWithData edges();
 
-    void *get_edge_data(std::pair<int, int> edge);
+    virtual EdgeViewWithData edges(int id);
 
-    NodeView neighbors(int id);
+    virtual EdgeViewWithData edges(const std::vector<int>& ids);
 
-    //Counting
+    virtual bool has_edge(std::pair<int, int> edge);
+    virtual bool has_edge(int u,int v);
+
+    virtual void *get_edge_data(std::pair<int, int> edge);
+
+    virtual NodeViewWithData neighbors(int id);
+
+    virtual //Counting
     int order();
 
-    int number_of_nodes();
+    virtual int number_of_nodes();
 
-    std::unordered_map<int, float> degree();
+    virtual std::unordered_map<int, int> degree();
 
-    std::unordered_map<int, float> degree(const std::vector<int>& nodes);
+    virtual std::unordered_map<int, int> degree(const std::vector<int>& nodes);
 
-    float degree(int id);
+    virtual int degree(int id);
+//    virtual std::unordered_map<int, float> weighted_degree();
+//
+//    virtual std::unordered_map<int, float> weighted_degree(const std::vector<int>& nodes);
+//
+//    virtual float weighted_degree(int id);
 
-    float size();
+    virtual float size();
 
-    int number_of_edges();
+    virtual int number_of_edges();
 
-    int number_of_edges(std::pair<int, int> edge);
+    virtual int number_of_edges(std::pair<int, int> edge);
 
     //Copy
-    Graph(Graph &);
-
-    Graph *subgraph(std::vector<int> nodes);
-
-    Graph *edge_subgraph(std::vector<std::tuple<int, int>> edges);
+//    Graph(Graph &);
+//
+//    virtual Graph *subgraph(std::vector<int> nodes);
+//
+//    virtual Graph *edge_subgraph(std::vector<std::tuple<int, int>> edges);
 
 
 };

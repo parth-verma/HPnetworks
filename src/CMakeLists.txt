@@ -9,7 +9,7 @@ add_library(${CMAKE_PROJECT_NAME}_lib STATIC
 #        components.cpp components.h
         DiGraph/DiGraph.cpp DiGraph/DiGraph.h
         Graph/Graph.cpp Graph/Graph.h
-#        generators/classic.cpp generators/classic.h
+        generators/classic.cpp generators/classic.h
 #        tournament.cpp tournament.h
 #        traversal_iterators.cpp traversal_iterators.h
 #        shortest_paths.cpp shortest_paths.h
@@ -22,4 +22,4 @@ add_library(${CMAKE_PROJECT_NAME}_lib STATIC
         #        approximation/kcomponents.cpp approximation/kcomponents.h
 #        operators/unary.cpp operators/unary.h
 #        generators/stochastic.cpp generators/stochastic.h
-        )
+        function.cpp function.h isomorphism/isomorph.h cluster.h clique.h isomorphism/isomorph.cpp connected.cpp connected.h types/EdgeView.cpp types/EdgeView.h types/EdgeViewWithData.cpp types/EdgeViewWithData.h types/NodeView.cpp types/NodeView.h types/NodeViewWithData.cpp types/NodeViewWithData.h types/typedefs.h generators/lattice.h algorithms/operators/product.cpp algorithms/operators/product.h)
